@@ -253,7 +253,8 @@ class Benchmark
             return $this;
         }
 
-        $this->startMiclotime[$mark] = (float)microtime();
+        $mt = explode(" ", microtime());
+        $this->startMiclotime[$mark] = (float)$mt[0];
         $this->startTime[$mark]      = time();
 
         return $this;
@@ -290,7 +291,8 @@ class Benchmark
             return $this;
         }
 
-        $this->endMiclotime[$mark] = (float)microtime();
+        $mt = explode(" ", microtime());
+        $this->endMiclotime[$mark] = (float)$mt[0];
         $this->endTime[$mark]      = time();
 
         return $this;
