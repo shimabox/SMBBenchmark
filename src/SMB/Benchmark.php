@@ -424,22 +424,19 @@ class Benchmark
      * マーキングが存在するか
      *
      * @param string $mark
-     * @param boolean $checkAll すべてのマーキング保持変数をチェックするかどうか
+     * @param boolean $checkStartMark 開始用マーキング保持変数をチェックするかどうか
      * @return boolean
      */
-    protected function existsMark($mark, $checkAll = true)
+    protected function existsMark($mark, $checkStartMark = true)
     {
         if ($this->validMark($mark) === false) {
             return false;
         }
 
-        if (
-            isset($this->startTime[$mark])
-            && isset($this->endMiclotime[$mark])
-            && isset($this->endTime[$mark])
-        ) {
-            if ($checkAll) {
-                return $this->startMiclotime[$mark];
+        if (isset($this->endMiclotime[$mark])) {
+
+            if ($checkStartMark) {
+                return isset($this->startMiclotime[$mark]);
             }
 
             return true;
