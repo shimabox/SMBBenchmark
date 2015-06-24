@@ -1,0 +1,22 @@
+{
+    "name": "shimabox/smbbenchmark",
+    "description": "Simple Benchmark",
+    "keywords": ["benchmark"],
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/shimabox/SMBBenchmark",
+    "authors": [
+      {
+        "name": "shimabox",
+        "email": "shimabox@gmail.com"
+      }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": ">=4.2"
+    },
+    "autoload": {
+      "psr-0": {
+        "SMB\\": "src/"
+      }
+    }
+}
