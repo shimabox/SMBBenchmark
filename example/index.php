@@ -16,6 +16,15 @@ require_once '/path/to/SMB/Benchmark/IFormatter.php';
 require_once '/path/to/SMB/Benchmark/Formatter.php';
 */
 
+/**
+// composer.json
+{
+  "require": {
+    "shimabox/smbbenchmark": "dev-master"
+  }
+}
+*/
+
 /*
  |------------------------------------------------------------------------------
  | example.1 通常利用

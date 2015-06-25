@@ -12,6 +12,16 @@
 
 ### 読み込む
 
+* composer.json
+
+```json
+{
+  "require": {
+    "shimabox/smbbenchmark": "dev-master"
+  }
+}
+```
+
 * SplClassLoaderを使う場合
 
 ```php
