@@ -16,7 +16,7 @@ require_once '/path/to/SMB/Benchmark/IFormatter.php';
 require_once '/path/to/SMB/Benchmark/Formatter.php';
 */
 
-/**
+/*
 // composer.json
 {
   "require": {
