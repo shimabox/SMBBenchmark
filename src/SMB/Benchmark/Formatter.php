@@ -18,6 +18,10 @@ class Formatter implements IFormatter
      */
     public function forEcho($mark, $benchmark)
     {
-        return '<pre>benchmark => ' . $mark . ' : ' . $benchmark . '秒</pre>' . PHP_EOL;
+        if (PHP_SAPI === 'cli') {
+            return 'benchmark => ' . $mark . ' : ' . $benchmark . PHP_EOL;
+        }
+
+        return '<pre>benchmark => ' . $mark . ' : ' . $benchmark . '秒</pre>';
     }
 }

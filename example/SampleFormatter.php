@@ -14,6 +14,10 @@ class SampleFormatter implements SMB\Benchmark\IFormatter
      */
     public function forEcho($mark, $benchmark)
     {
-        return '<pre>' . $mark . 'の計測時間は' . $benchmark . '秒でした</pre>' . PHP_EOL;
+        if (PHP_SAPI === 'cli') {
+            return $mark . 'の計測時間は' . $benchmark . '秒でした' . PHP_EOL;
+        }
+
+        return '<pre>' . $mark . 'の計測時間は' . $benchmark . '秒でした</pre>';
     }
 }
