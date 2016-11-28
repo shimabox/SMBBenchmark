@@ -436,6 +436,97 @@ class BenchmarkTest extends \TestCaseBase
 
         $this->assertTrue($actual === '');
     }
+
+    /**
+     * 繰り返し指定されていたら指定された回数だけ測定対象のメソッドが呼ばれている
+     * @test
+     */
+    public function 繰り返し指定されていたら指定された回数だけ測定対象のメソッドが呼ばれている()
+    {
+        // モック
+        $mock = $this->getMockBuilder('mock')
+            ->setMethods(array('test1', 'test2', 'test3'))
+            ->getMock()
+        ;
+
+        // mock->test1() 2回呼ばれていること
+        $mock->expects($this->exactly(2))->method('test1');
+        // mock->test2() 10回呼ばれていること
+        $mock->expects($this->exactly(10))->method('test2');
+
+        SMB\Benchmark::getInstance()
+            ->measure(array($mock, 'test1'), array(), 'bench1', 2)
+            ->measure(array($mock, 'test2'), array(), 'bench2', 10)
+        ;
+    }
+
+    /**
+     * 繰り返し指定されていなければ測定対象のメソッドは1回だけしか呼ばれない
+     * @test
+     */
+    public function 繰り返し指定されていなければ測定対象のメソッドは1回だけしか呼ばれない()
+    {
+        // モック
+        $mock = $this->getMockBuilder('mock')
+            ->setMethods(array('test'))
+            ->getMock()
+        ;
+
+        // 1回しか呼ばれない
+        $mock
+            ->expects($this->once())
+            ->method('test')
+        ;
+
+        SMB\Benchmark::getInstance()
+            ->measure(array($mock, 'test'), array(), 'bench1')
+        ;
+    }
+
+    /**
+     * 繰り返し指定回数が1以下または数値以外の場合測定対象のメソッドは1回だけしか呼ばれない
+     * @test
+     */
+    public function 繰り返し指定回数が1以下または数値以外の場合測定対象のメソッドは1回だけしか呼ばれない()
+    {
+        // モック
+        $mock = $this->getMockBuilder('mock')
+            ->setMethods(array('test1', 'test2', 'test3', 'test4'))
+            ->getMock()
+        ;
+
+        // 1回しか呼ばれないこと
+        $mock->expects($this->once())->method('test1');
+        $mock->expects($this->once())->method('test2');
+        $mock->expects($this->once())->method('test3');
+        $mock->expects($this->once())->method('test4');
+
+        SMB\Benchmark::getInstance()
+            ->measure(array($mock, 'test1'), array(), 'bench1', 1)
+            ->measure(array($mock, 'test2'), array(), 'bench2', 0)
+            ->measure(array($mock, 'test3'), array(), 'bench3', [])
+            ->measure(array($mock, 'test4'), array(), 'bench4', 'hoge')
+        ;
+    }
+
+    /**
+     * 繰り返し指定されている時の測定結果はある程度平均値が出ているか
+     * @test
+     * @group hoge
+     */
+    public function 繰り返し指定されている時の測定結果はある程度平均値が出ているか()
+    {
+        $ret = SMB\Benchmark::getInstance()
+                ->setScale(3) // 3桁に変更
+                ->measure(function() {
+                    usleep(2000); // 0.002秒
+                }, array(), 'bench1', 100) // 100回繰り返す
+                ;
+
+        // 何回繰り返しても小数点3位までは一緒
+        $this->assertSame('0.002', $ret->result('bench1'));
+    }
+
 }
 
 /**
