@@ -445,7 +445,7 @@ class BenchmarkTest extends \TestCaseBase
     {
         // モック
         $mock = $this->getMockBuilder('mock')
-            ->setMethods(array('test1', 'test2', 'test3'))
+            ->setMethods(array('test1', 'test2'))
             ->getMock()
         ;
 
