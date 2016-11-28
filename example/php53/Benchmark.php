@@ -166,7 +166,7 @@ class Benchmark
      * @param int $repeat
      * @return \SMB\Benchmark
      */
-    public function measure(/* callable */ $callable, $args = array(), $mark = '', $repeat=1)
+    public function measure(/* callable */ $callable, $args = array(), $mark = '', $repeat = 1)
     {
         $_repeat = (int) $repeat;
 
