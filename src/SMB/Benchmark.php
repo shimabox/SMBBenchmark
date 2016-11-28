@@ -112,7 +112,7 @@ namespace SMB;
  *
  * // インスタンスのクリア<br>
  * SMB\Benchmark::clear();
- *
+ * 
  * // その他詳細は/example/index.phpを参照
  *
  * </code>
@@ -170,6 +170,13 @@ class Benchmark
      * @var array
      */
     protected $endTime = array();
+
+    /**
+     * 繰り返し回数格納用
+     *
+     * @var array
+     */
+    protected $repeat = array();
 
     /**
      * 出力する小数点以下の桁数
@@ -266,15 +273,28 @@ class Benchmark
      * @param callable $callable
      * @param array $args
      * @param string $mark
+     * @param int $repeat
      * @return \SMB\Benchmark
      */
-    public function measure(callable $callable, $args = array(), $mark = '')
+    public function measure(callable $callable, $args = array(), $mark = '', $repeat = 1)
     {
+        $_repeat = (int) $repeat;
+
         !$mark ?: $this->start($mark);
 
-        call_user_func_array($callable, $args);
+        if ($_repeat > 1) {
 
-        !$mark ?: $this->end($mark);
+            for ($i = 0; $i < $_repeat; $i++) {
+                call_user_func_array($callable, $args);
+            }
+
+            $this->repeat[$mark] = $_repeat;
+
+        } else {
+            call_user_func_array($callable, $args);
+        }
+
+        !$mark ? : $this->end($mark);
 
         return $this;
     }
@@ -463,10 +483,21 @@ class Benchmark
                 $this->scale
             );
 
+            if ($this->isSpecifiedRepeat($mark)) {
+                return bcdiv(
+                    bcadd($diffTime, $diffMiclotime, $this->scale), $this->repeat[$mark], $this->scale
+                );
+            }
+
             return bcadd($diffTime, $diffMiclotime, $this->scale);
         }
 
         $diffMiclotime = $this->endMiclotime[$mark] - $this->startMiclotime[$mark];
+
+        if ($this->isSpecifiedRepeat($mark)) {
+            return ($diffTime + $diffMiclotime) / $this->repeat[$mark];
+        }
+
         return $diffTime + $diffMiclotime;
     }
 
@@ -504,4 +535,16 @@ class Benchmark
 
         return true;
     }
+
+    /**
+     * 繰り返しの指定がされているか
+     *
+     * @param string $mark
+     * @return boolean
+     */
+    protected function isSpecifiedRepeat($mark)
+    {
+        return isset($this->repeat[$mark]) && $this->repeat[$mark] > 1;
+    }
+
 }

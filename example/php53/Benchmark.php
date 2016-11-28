@@ -76,6 +76,13 @@ class Benchmark
     protected $formatter = null;
 
     /**
+     * 繰り返し回数格納用
+     *
+     * @var array
+     */
+    protected $repeat = array();
+
+    /**
      * コンストラクタ
      *
      * newしたらFatal error
@@ -156,15 +163,28 @@ class Benchmark
      * @param mixed $callable
      * @param array $args
      * @param string $mark
+     * @param int $repeat
      * @return \SMB\Benchmark
      */
-    public function measure(/* callable */ $callable, $args = array(), $mark = '')
+    public function measure(/* callable */ $callable, $args = array(), $mark = '', $repeat=1)
     {
+        $_repeat = (int) $repeat;
+
         !$mark ?: $this->start($mark);
 
-        call_user_func_array($callable, $args);
+        if ($_repeat > 1) {
 
-        !$mark ?: $this->end($mark);
+            for ($i = 0; $i < $_repeat; $i++) {
+                call_user_func_array($callable, $args);
+            }
+
+            $this->repeat[$mark] = $_repeat;
+
+        } else {
+            call_user_func_array($callable, $args);
+        }
+
+        !$mark ? : $this->end($mark);
 
         return $this;
     }
@@ -359,10 +379,21 @@ class Benchmark
                 $this->scale
             );
 
+            if ($this->isSpecifiedRepeat($mark)) {
+                return bcdiv(
+                    bcadd($diffTime, $diffMiclotime, $this->scale), $this->repeat[$mark], $this->scale
+                );
+            }
+
             return bcadd($diffTime, $diffMiclotime, $this->scale);
         }
 
         $diffMiclotime = $this->endMiclotime[$mark] - $this->startMiclotime[$mark];
+
+        if ($this->isSpecifiedRepeat($mark)) {
+            return ($diffTime + $diffMiclotime) / $this->repeat[$mark];
+        }
+
         return $diffTime + $diffMiclotime;
     }
 
@@ -402,4 +433,16 @@ class Benchmark
 
         return true;
     }
+
+    /**
+     * 繰り返しの指定がされているか
+     *
+     * @param string $mark
+     * @return boolean
+     */
+    protected function isSpecifiedRepeat($mark)
+    {
+        return isset($this->repeat[$mark]) && $this->repeat[$mark] > 1;
+    }
+
 }
