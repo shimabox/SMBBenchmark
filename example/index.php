@@ -292,7 +292,7 @@ SMB\Benchmark::getInstance()
 ; // => other3の計測時間は0.XXXXXX秒でした
 
 // このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は
-// /example/php53/Benchmark.php を利用してください。
+// SMB\Benchmark\PHP53\Benchmark を利用してください。
 // 違いは
 // ・Benchmark::measure() 第1引数のタイプヒンティング(callable)を削除
 // ・無名関数内で$thisを使うために

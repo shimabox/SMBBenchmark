@@ -1,6 +1,6 @@
 <?php
 
-namespace SMB;
+namespace SMB\Benchmark\PHP53;
 
 /**
  * 簡易ベンチマーク計測用
