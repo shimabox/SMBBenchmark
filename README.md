@@ -214,6 +214,26 @@ $bm->clearMarkAll();
 var_dump($bm->resultAll()); // => array()
 ```
 
+### example.7 計測対象の処理を指定した回数繰り返し実行 (結果は平均値)
+
+```php
+// SMB\Benchmark::getInstance()->measure();
+// 第4引数に繰り返し行う回数を指定します。
+$bm = SMB\Benchmark::getInstance()
+        ->measure(
+            function() {
+                usleep(2000); // 0.002秒
+            },
+            array(),
+            'bench17',
+            100 // 100回繰り返す
+        )
+        ;
+
+// 結果は100回行なった結果の平均値
+echo $bm->echoResult('bench17') . PHP_EOL; // benchmark => bench17 : 0.002・・・秒
+```
+
 ## その他
 
 ### BCMath(任意精度数学関数)を使用しています
@@ -237,21 +257,21 @@ $bm = SMB\Benchmark::getInstance();
 // 小数点4桁に変更
 $bm->setScale(4);
 
-$bm->start('bench17');
+$bm->start('other1');
 for ($i = 0; $i < 1; $i++) {}
-$bm->end('bench17');
+$bm->end('other1');
 
 // 出力
 
 // 小数点4桁まで出力
-$bm->echoResult('bench17'); // => benchmark => bench17 : 0.XXXX秒 (処理が早過ぎると、ほぼ0.0000秒になる)
+$bm->echoResult('other1'); // => benchmark => other1 : 0.XXXX秒 (処理が早過ぎると、ほぼ0.0000秒になる)
 
 
 // もちろんチェーン可能
 SMB\Benchmark::getInstance()
     ->setScale(4)
-    ->measure(function() {}, array(), 'bench18')
-    ->echoResult('bench18')
+    ->measure(function() {}, array(), 'other2')
+    ->echoResult('other2')
     ;
 
 // 1より小さい値をセットされたらデフォルトの6桁でセットし直します。
@@ -286,13 +306,13 @@ $formatter = new SampleFormatter();
 SMB\Benchmark::getInstance()
     ->setFormatter($formatter)
     ->measure(function() {}, array(), 'bench19')
-    ->echoResult('bench19')
-    ; // => bench19の計測時間は0.XXXXXX秒でした
+    ->echoResult('other3')
+    ; // => other3の計測時間は0.XXXXXX秒でした
 ```
 
 ### PHP5.3対応版
 
-このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は<pre>/example/php53/Benchmark.php</pre> を利用してください。
+このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は <pre>SMB\Benchmark\PHP53\Benchmark</pre> を利用してください。
 
 違いは
 
