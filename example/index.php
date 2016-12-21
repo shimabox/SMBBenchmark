@@ -3,24 +3,14 @@
 error_reporting(-1);
 ini_set('display_errors', 1);
 
-// 読み込み (SplClassLoaderを使う場合)
-require_once 'SplClassLoader.php';
-$includePath = realpath(__DIR__ . '/../src');
-$classLoader = new SplClassLoader('SMB', $includePath);
-$classLoader->register();
-
-/*
-// 読み込み (SplClassLoaderを使わない場合)
-require_once '/path/to/SMB/Benchmark.php';
-require_once '/path/to/SMB/Benchmark/IFormatter.php';
-require_once '/path/to/SMB/Benchmark/Formatter.php';
-*/
+// vendor/autoload.php
+require_once realpath(__DIR__ . '/../vendor').'/autoload.php';
 
 /*
 // composer.json
 {
   "require": {
-    "shimabox/smbbenchmark": "dev-master"
+    "shimabox/smbbenchmark": "^1.0"
   }
 }
 */

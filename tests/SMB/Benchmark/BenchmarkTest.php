@@ -5,8 +5,6 @@
  *
  * PHP version 5 >= 5.4
  *
- * PHPUnit version 4 >= 4.2.0
- *
  * @group  SMBBenchmark
  * @author shimabox.net
  */

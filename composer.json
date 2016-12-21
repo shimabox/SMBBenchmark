@@ -11,9 +11,13 @@
         "email": "shimabox@gmail.com"
       }
     ],
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
     "autoload": {
-      "psr-0": {
-        "SMB\\": "src/"
-      }
+        "psr-4": {"SMB¥¥": "src/SMB"}
+    },
+    "autoload-dev": {
+        "psr-4": {"SMB¥¥": "tests/SMB"}
     }
 }
