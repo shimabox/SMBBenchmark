@@ -1,5 +1,12 @@
 # SMBBenchmark
 
+[![Build Status](https://travis-ci.org/shimabox/SMBBenchmark.svg?branch=master)](https://travis-ci.org/shimabox/SMBBenchmark)
+[![License](https://poser.pugx.org/shimabox/smbbenchmark/license)](https://packagist.org/packages/shimabox/smbbenchmark)
+[![Latest Stable Version](https://poser.pugx.org/shimabox/smbbenchmark/v/stable)](https://packagist.org/packages/shimabox/smbbenchmark)
+[![Latest Unstable Version](https://poser.pugx.org/shimabox/smbbenchmark/v/unstable)](https://packagist.org/packages/shimabox/smbbenchmark)
+
+Simple benchmark of php
+
 ## About
 
 * PHPの簡易ベンチマークです
@@ -8,38 +15,18 @@
 * PHP5.4以上で動きます
   * 後述しますが、PHP5.3対応版もあります
 
+## Installation
+
+```
+composer require shimabox/smbbenchmark
+```
+
 ## Usage
 
-### 読み込む
-
-* composer.json
-
-```json
-{
-  "require": {
-    "shimabox/smbbenchmark": "dev-master"
-  }
-}
-```
-
-* SplClassLoaderを使う場合
-
 ```php
-require_once 'SplClassLoader.php';
-$includePath = realpath(__DIR__ . '/../src');
-$classLoader = new SplClassLoader('SMB', $includePath);
-$classLoader->register();
+// vendor/autoload.php を読み込みます
+require_once '/your/path/to/vendor/autoload.php';
 ```
-
-* SplClassLoaderを使わない場合(手動とか)
-
-```php
-require_once '/path/to/SMB/Benchmark.php';
-require_once '/path/to/SMB/Benchmark/IFormatter.php';
-require_once '/path/to/SMB/Benchmark/Formatter.php';
-```
-
-* /SMB/Benchmark.php, /SMB/Benchmark/IFormatter.php, /SMB/Benchmark/Formatter.php が読み込めれば大丈夫です
 
 ### example.1 通常利用
 
@@ -244,11 +231,38 @@ echo $bm->echoResult('bench17') . PHP_EOL; // benchmark => bench17 : 0.002・・
 
 BCMathが使えなくても利用できますが測定結果の精度は落ちます。
 
+### BCMath(php-bcmath) のインストール方法
+
+例です。各環境に合わせて修正してください。
+
+**環境**
+```
+$ cat /etc/redhat-release # CentOS release 6.8 (Final)
+```
+
+**インストール**
+```
+# enablerepoは適宜修正
+$ sudo yum install php-bcmath --enablerepo=remi,remi-php56
+```
+
+**以下でインストールされているか確認できます**
+```
+$ yum list installed php-bcmath
+インストール済みパッケージ
+php-bcmath.x86_64    5.6.29-1.el6.remi    @remi-php56
+```
+
+**インストールできたらapacheのreloadを行います**
+```
+$ sudo service httpd reload
+```
+
 ### 出力結果の小数点を変更
 出力結果はデフォルトで小数点6桁(0.000000秒 マイクロ秒単位)まで表示されていますが、これは変更可能です。
 ※小数点を少なくした場合、処理が早すぎるとほぼ0秒に丸められます
 
-変更するには <pre>setScale()</pre> を使います。
+変更するには ```setScale()``` を使います。
 
 ```php
 // インスタンス生成
@@ -281,7 +295,7 @@ $bm->setScale(0); // => scaleは6になる
 ### 出力結果のフォーマットを変更
 
 echoResult(),echoResultAll() の出力フォーマットはデフォルトで
-<pre>benchmark => {$mark} : {$benchmark}秒</pre>ですが、\SMB\Benchmark\Formatter::forEcho()を修正するか、\SMB\Benchmark\IFormatterを実装したクラスを作成しセットすることで好きなフォーマットに変更可能です。
+```benchmark => {$mark} : {$benchmark}秒```ですが、\SMB\Benchmark\Formatter::forEcho()を修正するか、\SMB\Benchmark\IFormatterを実装したクラスを作成しセットすることで好きなフォーマットに変更可能です。
 
 こんなフォーマッターを作成したら、
 
@@ -312,7 +326,7 @@ SMB\Benchmark::getInstance()
 
 ### PHP5.3対応版
 
-このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は <pre>SMB\Benchmark\PHP53\Benchmark</pre> を利用してください。
+このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は ```SMB\Benchmark\PHP53\Benchmark``` を利用してください。
 
 違いは
 
@@ -325,12 +339,10 @@ SMB\Benchmark::getInstance()
 
 ## Test
 
-* PHPUnitのバージョンは4.2.0で確認しています
+* PHPUnitのバージョンは4.8.31で確認しています
 
-```sh
-phpunit --group SMBBenchmark
- or
-phpunit
+```
+vendor/bin/phpunit
 ```
 
 ## 注意点
