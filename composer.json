@@ -15,9 +15,9 @@
         "phpunit/phpunit": "^4.8"
     },
     "autoload": {
-        "psr-4": {"SMB¥¥": "src/SMB"}
+        "psr-4": {"SMB\\": "src/SMB"}
     },
     "autoload-dev": {
-        "psr-4": {"SMB¥¥": "tests/SMB"}
+        "psr-4": {"SMB\\": "tests/SMB"}
     }
 }
