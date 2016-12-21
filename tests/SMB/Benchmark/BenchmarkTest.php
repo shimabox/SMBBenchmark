@@ -224,7 +224,9 @@ class BenchmarkTest extends \TestCaseBase
 
             $this->fail(); // 例外が発生しなければ失敗
 
-        } catch (\Exception $e) {
+        } catch (\Exception $ex) {
+
+        } catch (\Error $e) { // PHP_VERSION >= 7
 
         }
     }
