@@ -197,11 +197,12 @@ class Benchmark
      */
     public function end($mark)
     {
+        $mt = explode(" ", microtime());
+
         if ($this->validMark($mark) === false) {
             return $this;
         }
 
-        $mt = explode(" ", microtime());
         $this->endMiclotime[$mark] = (float)$mt[0];
         $this->endTime[$mark]      = (int)$mt[1];
 
