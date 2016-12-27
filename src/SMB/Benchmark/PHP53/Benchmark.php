@@ -2,6 +2,9 @@
 
 namespace SMB\Benchmark\PHP53;
 
+use SMB\Benchmark\IFormatter;
+use SMB\Benchmark\Formatter;
+
 /**
  * 簡易ベンチマーク計測用
  *
@@ -95,7 +98,7 @@ class Benchmark
     /**
      * インスタンス取得
      *
-     * @return \SMB\Benchmark
+     * @return \SMB\Benchmark\PHP53\Benchmark
      */
     public static function getInstance()
     {
@@ -117,7 +120,7 @@ class Benchmark
      * 0 or 負数指定時はデフォルトにセットし直す
      *
      * @param int $scale
-     * @return \SMB\Benchmark
+     * @return \SMB\Benchmark\PHP53\Benchmark
      */
     public function setScale($scale)
     {
@@ -130,9 +133,9 @@ class Benchmark
      * 出力結果フォーマッター setter
      *
      * @param \SMB\Benchmark\IFormatter $formatter
-     * @return \SMB\Benchmark
+     * @return \SMB\Benchmark\PHP53\Benchmark
      */
-    public function setFormatter(Benchmark\IFormatter $formatter)
+    public function setFormatter(IFormatter $formatter)
     {
         $this->formatter = $formatter;
         return $this;
@@ -142,7 +145,7 @@ class Benchmark
      * 開始
      *
      * @param string $mark
-     * @return \SMB\Benchmark
+     * @return \SMB\Benchmark\PHP53\Benchmark
      */
     public function start($mark)
     {
@@ -164,7 +167,7 @@ class Benchmark
      * @param array $args
      * @param string $mark
      * @param int $repeat
-     * @return \SMB\Benchmark
+     * @return \SMB\Benchmark\PHP53\Benchmark
      */
     public function measure(/* callable */ $callable, $args = array(), $mark = '', $repeat = 1)
     {
@@ -193,7 +196,7 @@ class Benchmark
      * 終了
      *
      * @param string $mark
-     * @return \SMB\Benchmark
+     * @return \SMB\Benchmark\PHP53\Benchmark
      */
     public function end($mark)
     {
@@ -403,12 +406,12 @@ class Benchmark
      *
      * 無名関数内で呼ばれるのでpublic
      *
-     * @return Benchmark\IFormatter
+     * @return \SMB\Benchmark\IFormatter
      */
     public function getFormatter()
     {
         if ($this->formatter === null) {
-            $this->formatter = new Benchmark\Formatter();
+            $this->formatter = new Formatter();
             return $this->formatter;
         }
 
