@@ -22,6 +22,22 @@ class Formatter implements IFormatter
             return 'benchmark => ' . $mark . ' : ' . $benchmark . PHP_EOL;
         }
 
-        return '<pre>benchmark => ' . $mark . ' : ' . $benchmark . '秒</pre>';
+        return '<pre>benchmark => ' . $mark . ' : ' . $benchmark . '</pre>';
+    }
+
+    /**
+     * 計測結果出力用フォーマット
+     *
+     * @param array $result
+     * @return array
+     */
+    public function forOutput(array $result)
+    {
+        $ret = array();
+        foreach ($result as $k => $v) {
+            $ret[] = array('label' => $k, 'benchmark' => $v);
+        }
+
+        return $ret;
     }
 }

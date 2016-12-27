@@ -17,4 +17,12 @@ interface IFormatter
      * @return string
      */
     public function forEcho($mark, $benchmark);
+
+    /**
+     * 計測結果出力用フォーマット
+     *
+     * @param array $result
+     * @return array
+     */
+    public function forOutput(array $result);
 }
