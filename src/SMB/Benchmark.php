@@ -2,120 +2,12 @@
 
 namespace SMB;
 
+use SMB\Arrayto\Interfaces;
+
 /**
  * 簡易ベンチマーク計測用
  *
  * PHP version 5 >= 5.4
- *
- * <code>
- * // example.1 簡単な例
- *
- * // インスタンス生成<br>
- * $bm = SMB\Benchmark::getInstance();
- *
- * // スタート<br>
- * $bm->start('bench1'); // 引数にマーキング用の値を渡す
- *
- * // 計測処理<br>
- * for ($i = 0; $i < 100; $i++) {<br>
- *     new stdClass();<br>
- * }
- *
- * // 終了<br>
- * $bm->end('bench1');
- *
- * // 出力 echo<br>
- * // 小数点6桁まで出力（デフォルト）<br>
- * $bm->echoResult('bench1'); // => benchmark => bench1 : 0.・・・・・・秒
- *
- * // 出力 受け取り<br>
- * $ret = $bm->result('bench1');
- *
- * // example.2 計測したい処理をmeasure()に書く<br>
- * // measure()はcallableを引数に取ります
- *
- * // インスタンス生成<br>
- * $bm = SMB\Benchmark::getInstance();
- *
- * // 計測したい処理をmeasure()に書く<br>
- * $d = 4; // ローカル変数<br>
- * $bm->measure(<br>
- *     // 第1引数に無名関数も渡せてその中に処理も書ける<br>
- *     function($a, $b, $c) use ($d){<br>
- *         echo $a.$b.$c.$d.PHP_EOL;<br>
- *     },<br>
- *     array(1, 2, 3), // 関数に対して引数を配列で渡せる<br>
- *     'bench2' // start(),end()を使わなくてもマークできる<br>
- * );<br>
- *
- * // 関数の引数なしでマークありの場合は空の配列を第2引数に渡す<br>
- * $bm->measure(<br>
- *     function(){<br>
- *         for ($i = 0; $i < 10000; $i++) {<br>
- *             new stdClass();<br>
- *         }<br>
- *     },<br>
- *     array(),<br>
- *     'bench3'<br>
- * );
- *
- * // オブジェクトの関数も渡せる<br>
- * $obj = new Hoge();<br>
- * $bm->measure(array($obj, 'callbackMethod'));<br>
- * // 引数は配列で渡す<br>
- * $bm->measure(array($obj, 'callbackMethod'), array(1, 2, 3));<br>
- * // 静的メソッド<br>
- * $bm->measure(array('Hoge', 'staticCallbackMethod'));<br>
- *
- * // example.3 メソッドチェーン可能
- *
- * $bm = SMB\Benchmark::getInstance()<br>
- *         ->start('bench4')<br>
- *         ->measure(function(){<br>
- *             usleep(1000000); // 1秒<br>
- *         })<br>
- *         ->end('bench4')<br>
- *         ->measure(function(){<br>
- *                 usleep(500000); // 0.5秒<br>
- *         }, array(), 'bench5')<br>
- *         ;
- *
- * // 入れ子も可能<br>
- * $bm = SMB\Benchmark::getInstance()<br>
- *         ->start('bench6')<br>
- *         ->start('bench7')<br>
- *         ->measure(function(){<br>
- *             usleep(100000); // 0.1秒<br>
- *         })<br>
- *         ->end('bench7')<br>
- *         ->measure(function(){<br>
- *                 usleep(50000); // 0.05秒<br>
- *         }, array(), 'bench8')<br>
- *         ->end('bench6')<br>
- *         ;
- *
- * // example.4 すべての計測結果を出力<br>
- * $bm->echoResultAll(); // => bench1〜bench8までの計測結果がechoされる<br>
- * $bm->resultAll();     // => bench1〜bench8までの計測結果が配列で返される<br>
- *
- * // example.5 初期化<br>
- * // 上記でわかる通りシングルトンなので初期化用メソッドを持っています
- *
- * // マーキングのクリア<br>
- * $bm->clearMark('bench8');  // bench8をクリア<br>
- * $bm->echoResult('bench8'); // => 出力なし<br>
- * $bm->echoResultAll();      // => bench1〜bench7までの計測結果が出力される<br>
- *
- * // すべてのマーキングをクリア<br>
- * $bm->clearMarkAll();<br>
- * $bm->echoResultAll(); // => 出力なし
- *
- * // インスタンスのクリア<br>
- * SMB\Benchmark::clear();
- * 
- * // その他詳細は/example/index.phpを参照
- *
- * </code>
  *
  * @example /example/index.php
  * @author  shimabox.net
@@ -385,6 +277,38 @@ class Benchmark
             echo $this->getFormatter()->forEcho($mark, $benchmark);
 
         }, array_keys($this->startMiclotime));
+    }
+
+    /**
+     * 結果をダウンロード
+     * @param SMB\Arrayto\Interfaces\Downloadable $downloader
+     * @param string $fileName
+     */
+    public function download(Interfaces\Downloadable $downloader, $fileName)
+    {
+        $result = $this->getFormatter()->forOutput($this->resultAll());
+        $downloader->setRows($result)->download($fileName);
+    }
+
+    /**
+     * 結果を出力
+     * @param SMB\Arrayto\Interfaces\Outputable $outputter
+     */
+    public function output(Interfaces\Outputable $outputter)
+    {
+        $result = $this->getFormatter()->forOutput($this->resultAll());
+        $outputter->setRows($result)->output();
+    }
+
+    /**
+     * 結果を保存
+     * @param SMB\Arrayto\Interfaces\Writable $writer
+     * @param string $fileName
+     */
+    public function write(Interfaces\Writable $writer, $fileName)
+    {
+        $result = $this->getFormatter()->forOutput($this->resultAll());
+        $writer->setRows($result)->setFileName($fileName)->write();
     }
 
     /**
