@@ -36,7 +36,7 @@ $bm->end('bench1');
 
 // 出力
 // 小数点6桁(マイクロ秒単位)まで出力（デフォルト）
-$bm->echoResult('bench1'); // => benchmark => bench1 : 0.・・・・・・秒
+$bm->echoResult('bench1'); // => benchmark => bench1 : 0.・・・・・・
 
 /*
  |------------------------------------------------------------------------------
@@ -125,9 +125,9 @@ $bm = SMB\Benchmark::getInstance()
         ->end('bench9')
         ;
 
-$bm->echoResult('bench9');  // => benchmark => bench9 : 0.15・・・・秒
-$bm->echoResult('bench10'); // => benchmark => bench10 : 0.1・・・・・秒
-$bm->echoResult('bench11'); // => benchmark => bench10 : 0.05・・・・秒
+$bm->echoResult('bench9');  // => benchmark => bench9 : 0.15・・・・
+$bm->echoResult('bench10'); // => benchmark => bench10 : 0.1・・・・・
+$bm->echoResult('bench11'); // => benchmark => bench10 : 0.05・・・・
 
 /*
  |------------------------------------------------------------------------------
@@ -212,7 +212,49 @@ $bm = SMB\Benchmark::getInstance()
         ;
 
 // 結果は100回行なった結果の平均値
-echo $bm->echoResult('bench17') . PHP_EOL; // benchmark => bench17 : 0.002・・・秒
+echo $bm->echoResult('bench17') . PHP_EOL; // benchmark => bench17 : 0.002・・・
+
+/*
+ |------------------------------------------------------------------------------
+ | example.8 計測結果のダウンロード/出力/保存
+ |------------------------------------------------------------------------------
+ | 出力(output())とダウンロード(download())は、header出力を行っているので
+ | 使用する前に出力が何も無いことを確認してください
+ | @see https://github.com/shimabox/SMBArrayto
+ */
+
+$bm = SMB\Benchmark::getInstance()
+        ->measure(
+            function() {
+                usleep(1000); // 0.001秒
+            },
+            array(),
+            'bench18'
+        )
+        ->measure(
+            function() {
+                usleep(2000); // 0.002秒
+            },
+            array(),
+            'bench19'
+        )
+        ;
+
+// e.g.) CSV形式
+$csv = SMB\Arrayto\Csv::Factory();
+
+$downloader = $csv->getDownloader();
+$outputter  = $csv->getOutputter();
+$writer     = $csv->getWriter();
+
+// 第2引数で指定したファイル名でダウンロード (header出力あり)
+// $bm->download($downloader, 'hoge.csv'); exit;
+
+// 出力(header出力 + echo())
+// $bm->output($outputter); exit;
+
+// 第2引数で指定したファイルパスに保存
+// $bm->write($writer, 'hoge.csv'); exit;
 
 /*
  |------------------------------------------------------------------------------
@@ -241,7 +283,7 @@ $bm->end('other1');
 // 出力
 
 // 小数点4桁まで出力
-$bm->echoResult('other1'); // => benchmark => other1 : 0.XXXX秒 (処理が早過ぎると、ほぼ0.0000秒になる)
+$bm->echoResult('other1'); // => benchmark => other1 : 0.XXXX (処理が早過ぎると、ほぼ0.0000秒になる)
 // もちろんチェーン可能
 SMB\Benchmark::getInstance()
     ->setScale(4)
@@ -253,7 +295,7 @@ SMB\Benchmark::getInstance()
 $bm->setScale(0); // => scaleは6になる
 
 // echoResult(),echoResultAll() での出力フォーマットはデフォルトで
-//   <pre>benchmark => {$mark} : {$benchmark}秒</pre>
+//   <pre>benchmark => {$mark} : {$benchmark}</pre>
 // ですが、\SMB\Benchmark\Formatter::forEcho()を修正するか、
 // \SMB\Benchmark\IFormatterを実装したクラスを作成しセットすることで
 // 好きなフォーマットに変更可能です。
@@ -282,12 +324,13 @@ SMB\Benchmark::getInstance()
 ; // => other3の計測時間は0.XXXXXX秒でした
 
 // このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は
-// SMB\Benchmark\PHP53\Benchmark を利用してください。
+// v1.2.0のSMB\Benchmark\PHP53\Benchmark を利用してください。
 // 違いは
-// ・Benchmark::measure() 第1引数のタイプヒンティング(callable)を削除
-// ・無名関数内で$thisを使うために
-//   Benchmark::resultAll(), Benchmark::echoResultAll() で$thisを退避
-//   Benchmark::existsMark(), Benchmark::calc(), Benchmark::getFormatter() のアクセス修飾子をpublicに
-// です。(本当は配列もせっかくだから[]で扱いたかった。。)
+//  - Benchmark::measure() 第1引数のタイプヒンティング(callable)を削除
+//    無名関数内で$thisを使うために
+//  - Benchmark::resultAll(), Benchmark::echoResultAll() で$thisを退避
+//  - Benchmark::existsMark(), Benchmark::calc(), Benchmark::getFormatter() のアクセス修飾子をpublicに
+//  - 計測結果のダウンロード/出力/保存機能は使用不可
+// です。
 
 // 尚、当ライブラリで出した計測結果はあくまでも目安として使ってください。
