@@ -327,9 +327,9 @@ SMB\Benchmark::getInstance()
 // v1.2.0のSMB\Benchmark\PHP53\Benchmark を利用してください。
 // 違いは
 //  - Benchmark::measure() 第1引数のタイプヒンティング(callable)を削除
-//    無名関数内で$thisを使うために
-//  - Benchmark::resultAll(), Benchmark::echoResultAll() で$thisを退避
-//  - Benchmark::existsMark(), Benchmark::calc(), Benchmark::getFormatter() のアクセス修飾子をpublicに
+//  - 無名関数内で$thisを使うために
+//    - Benchmark::resultAll(), Benchmark::echoResultAll() で$thisを退避
+//    - Benchmark::existsMark(), Benchmark::calc(), Benchmark::getFormatter() のアクセス修飾子をpublicに
 //  - 計測結果のダウンロード/出力/保存機能は使用不可
 // です。
 
