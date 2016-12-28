@@ -15,6 +15,12 @@ Simple benchmark of php
 * PHP5.4以上で動きます
   * 後述しますが、PHP5.3対応版もあります
 
+## Requirements
+
+- PHP 5.4+ or newer
+- [Composer](https://getcomposer.org)
+- [shimabox/SMBArrayto](https://github.com/shimabox/SMBArrayto "shimabox/SMBArrayto: Array to csv, tsv, ltsv, xml, json, ...")
+
 ## Installation
 
 ```
@@ -221,6 +227,52 @@ $bm = SMB\Benchmark::getInstance()
 echo $bm->echoResult('bench17') . PHP_EOL; // benchmark => bench17 : 0.002・・・秒
 ```
 
+### example.8 計測結果のダウンロード/出力/保存
+
+```php
+/*
+ |------------------------------------------------------------------------------
+ | example.8 計測結果のダウンロード/出力/保存
+ |------------------------------------------------------------------------------
+ | 出力(output())とダウンロード(download())は、header出力を行っているので
+ | 使用する前に出力が何も無いことを確認してください
+ | @see https://github.com/shimabox/SMBArrayto
+ */
+
+$bm = SMB\Benchmark::getInstance()
+        ->measure(
+            function() {
+                usleep(1000); // 0.001秒
+            },
+            array(),
+            'bench18'
+        )
+        ->measure(
+            function() {
+                usleep(2000); // 0.002秒
+            },
+            array(),
+            'bench19'
+        )
+        ;
+
+// e.g.) CSV形式
+$csv = SMB\Arrayto\Csv::Factory();
+
+$downloader = $csv->getDownloader();
+$outputter  = $csv->getOutputter();
+$writer     = $csv->getWriter();
+
+// 第2引数で指定したファイル名でダウンロード (header出力あり)
+// $bm->download($downloader, 'hoge.csv'); exit;
+
+// 出力(header出力 + echo())
+// $bm->output($outputter); exit;
+
+// 第2引数で指定したファイルパスに保存
+// $bm->write($writer, 'hoge.csv'); exit;
+```
+
 ## その他
 
 ### BCMath(任意精度数学関数)を使用しています
@@ -326,7 +378,7 @@ SMB\Benchmark::getInstance()
 
 ### PHP5.3対応版
 
-このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は ```SMB\Benchmark\PHP53\Benchmark``` を利用してください。
+このライブラリの対象はPHP5.4以上ですが、PHP5.3でも動かしたい場合は ```v1.2.0``` の ```SMB\Benchmark\PHP53\Benchmark``` を利用してください。
 
 違いは
 
@@ -334,8 +386,9 @@ SMB\Benchmark::getInstance()
 * 無名関数内で$thisを使うために
   * Benchmark::resultAll(), Benchmark::echoResultAll() で$thisを退避
   * Benchmark::existsMark(), Benchmark::calc(), Benchmark::getFormatter() のアクセス修飾子をpublicに
+* 計測結果のダウンロード/出力/保存機能は使用不可
 
-です。(本当は配列もせっかくだから[]で扱いたかった。。)
+です。
 
 ## Test
 
