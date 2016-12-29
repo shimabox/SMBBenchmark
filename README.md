@@ -402,6 +402,9 @@ vendor/bin/phpunit
 
 当ライブラリで出した計測結果はあくまでも目安として使ってください。
 
+## See Also
+[ベンチマークの結果をd3.jsで可視化してみた | Shimabox Blog](https://blog.shimabox.net/2016/12/29/visualize_the_benchmark_by_d3_js/ "ベンチマークの結果をd3.jsで可視化してみた | Shimabox Blog")
+
 ## License
 
 * MIT License
