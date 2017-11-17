@@ -13,6 +13,10 @@ matrix:
     - php: 5.4
       dist: precise
 
+addons:
+  code_climate:
+    repo_token: f9071e1c401405352f81116648f1b362b7887d1c8542ad39e5a56569edcc97e8
+
 before_script:
   - travis_retry composer install
 
