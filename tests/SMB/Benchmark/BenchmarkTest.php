@@ -10,7 +10,7 @@
  */
 class BenchmarkTest extends \TestCaseBase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -225,9 +225,9 @@ class BenchmarkTest extends \TestCaseBase
             $this->fail(); // 例外が発生しなければ失敗
 
         } catch (\Exception $ex) {
-
+            $this->assertInstanceOf(\Exception::class, $ex);
         } catch (\Error $e) { // PHP_VERSION >= 7
-
+            $this->assertInstanceOf(\TypeError::class, $e);
         }
     }
 
@@ -244,7 +244,7 @@ class BenchmarkTest extends \TestCaseBase
                 ;
 
         // 振る舞い指定
-        $formatter->expects($this->any())
+        $formatter->expects($this->once())
             ->method('forEcho')
             ->with(
                 $this->equalTo('bench1'),
@@ -275,7 +275,7 @@ class BenchmarkTest extends \TestCaseBase
         ;
 
         // 振る舞い指定
-        $formatter->expects($this->any())
+        $formatter->expects($this->exactly(2))
             ->method('forEcho')
             ->withConsecutive(
                 array($this->equalTo('bench1'), $this->greaterThan(0.03)),
