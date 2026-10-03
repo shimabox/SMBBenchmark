@@ -10,7 +10,7 @@
  */
 class BenchmarkTest extends \TestCaseBase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -216,19 +216,10 @@ class BenchmarkTest extends \TestCaseBase
      */
     public function callable以外がmeasureに渡されたらException()
     {
-        try {
-            SMB\Benchmark::getInstance()
-                ->measure(array('Piyo', 'test'), array(), 'bench1')
-                ->result('bench1')
-                ;
-
-            $this->fail(); // 例外が発生しなければ失敗
-
-        } catch (\Exception $ex) {
-
-        } catch (\Error $e) { // PHP_VERSION >= 7
-
-        }
+        $this->expectException(\TypeError::class);
+        SMB\Benchmark::getInstance()
+            ->measure(array('Piyo', 'test'), array(), 'bench1')
+            ->result('bench1');
     }
 
     /**
@@ -244,7 +235,7 @@ class BenchmarkTest extends \TestCaseBase
                 ;
 
         // 振る舞い指定
-        $formatter->expects($this->any())
+        $formatter->expects($this->once())
             ->method('forEcho')
             ->with(
                 $this->equalTo('bench1'),
@@ -275,7 +266,7 @@ class BenchmarkTest extends \TestCaseBase
         ;
 
         // 振る舞い指定
-        $formatter->expects($this->any())
+        $formatter->expects($this->exactly(2))
             ->method('forEcho')
             ->withConsecutive(
                 array($this->equalTo('bench1'), $this->greaterThan(0.03)),
