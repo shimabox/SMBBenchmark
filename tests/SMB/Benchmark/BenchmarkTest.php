@@ -216,19 +216,10 @@ class BenchmarkTest extends \TestCaseBase
      */
     public function callable以外がmeasureに渡されたらException()
     {
-        try {
-            SMB\Benchmark::getInstance()
-                ->measure(array('Piyo', 'test'), array(), 'bench1')
-                ->result('bench1')
-                ;
-
-            $this->fail(); // 例外が発生しなければ失敗
-
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf(\Exception::class, $ex);
-        } catch (\Error $e) { // PHP_VERSION >= 7
-            $this->assertInstanceOf(\TypeError::class, $e);
-        }
+        $this->expectException(\TypeError::class);
+        SMB\Benchmark::getInstance()
+            ->measure(array('Piyo', 'test'), array(), 'bench1')
+            ->result('bench1');
     }
 
     /**
